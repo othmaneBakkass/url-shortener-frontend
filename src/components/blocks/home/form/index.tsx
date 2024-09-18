@@ -6,7 +6,6 @@ import { Button } from "@/components/ui/button";
 import {
 	Form,
 	FormControl,
-	FormDescription,
 	FormField,
 	FormItem,
 	FormLabel,
@@ -42,7 +41,7 @@ export function CreateShortLinkForm() {
 		<Form {...form}>
 			<form
 				onSubmit={form.handleSubmit(onSubmit)}
-				className="flex gap-y-4 flex-col max-w-96 p-4 rounded-2xl border border-neutral-800">
+				className="flex gap-y-4 mx-auto flex-col max-w-[calc(100%-40px)] sm:max-w-96 p-4 rounded-2xl border border-neutral-800">
 				<FormField
 					control={form.control}
 					name="name"
