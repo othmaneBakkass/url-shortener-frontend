@@ -3,11 +3,13 @@ import {
 	CardContent,
 	CardHeader,
 	CardTitle,
+	CardFooter,
 } from "@/components/ui/card";
 import { LinkIcon } from "@/components/ui/icons/link";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
 import { useCopyToClipboard, useDebounceCallback } from "usehooks-ts";
+import { DeleteCardBTN } from "./delete-card-btn";
 
 export function ClipBoardButton({
 	className,
@@ -41,9 +43,9 @@ export function ClipBoardButton({
 				viewBox="0 0 24 24"
 				fill="none"
 				stroke="currentColor"
-				stroke-width="2"
-				stroke-linecap="round"
-				stroke-linejoin="round"
+				strokeWidth="2"
+				strokeLinecap="round"
+				strokeLinejoin="round"
 				className={cn(
 					"text-foreground size-4 hover:text-card-foreground",
 					className
@@ -58,25 +60,36 @@ export function ClipBoardButton({
 	);
 }
 
-export function Card() {
+export function Card({
+	shortLink,
+	name,
+	originalUrl,
+	id,
+}: {
+	shortLink: string;
+	name: string;
+	originalUrl: string;
+	id: string;
+}) {
+	const shortLinkURL = import.meta.env.VITE_WEBSITE_URL + "/" + shortLink;
 	return (
 		<DefaultCard className="w-full max-w-2xl">
 			<CardHeader className="flex-row justify-between items-center">
-				<CardTitle className="text-foreground">Google</CardTitle>
-				<ClipBoardButton textToCopy="http" />
+				<CardTitle className="text-foreground">{name}</CardTitle>
+				<ClipBoardButton textToCopy={shortLinkURL} />
 			</CardHeader>
 			<CardContent>
 				<div className="mb-2">
 					<h4 className="text-sm font-medium mb-1 text-card-foreground">
 						short link:
 					</h4>
-					<div>
-						<LinkIcon className="inline-block mr-1 text-primary hover:text-primary" />
+					<div className="flex items-center justify-start gap-x-1">
+						<LinkIcon className="shrink-0 mt-1 size-4 text-primary hover:text-primary" />
 						<a
 							target="_blank"
-							href="http://localhost:5173/"
-							className="text-primary underline-offset-4 underline hover:text-green-400">
-							http://localhost:5173/
+							href={shortLinkURL}
+							className="text-primary truncate underline-offset-4 underline hover:text-green-400">
+							{shortLinkURL}
 						</a>
 					</div>
 				</div>
@@ -84,17 +97,20 @@ export function Card() {
 					<h4 className="text-sm font-medium mb-1 text-card-foreground">
 						original url:
 					</h4>
-					<div>
-						<LinkIcon className="inline-block mr-1 text-primary hover:text-primary" />
+					<div className="flex items-center justify-start gap-x-1">
+						<LinkIcon className="shrink-0 mt-1 size-4 text-primary hover:text-primary" />
 						<a
 							target="_blank"
-							href="http://localhost:5173/"
-							className="text-primary underline-offset-4 underline hover:text-green-400">
-							http://localhost:5173/
+							href={originalUrl}
+							className="text-primary truncate underline-offset-4 underline hover:text-green-400">
+							{originalUrl}
 						</a>
 					</div>
 				</div>
 			</CardContent>
+			<CardFooter className="justify-end">
+				<DeleteCardBTN id={id} />
+			</CardFooter>
 		</DefaultCard>
 	);
 }
