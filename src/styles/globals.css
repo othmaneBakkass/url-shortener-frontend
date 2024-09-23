@@ -64,10 +64,14 @@
 		@apply border-border;
 	}
 	html {
-		@apply h-full w-full scroll-smooth;
+		@apply h-full w-full scroll-smooth caret-green-400 selection:bg-green-700;
 	}
 
 	body {
 		@apply bg-background text-foreground min-h-full w-full;
+	}
+
+	#root {
+		@apply min-h-dvh h-full w-full;
 	}
 }
