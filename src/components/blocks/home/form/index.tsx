@@ -12,6 +12,11 @@ import {
 	FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { useCreateShortLink } from "@/lib/queries/shortLinks/create-short-links";
+import { LoadingSpinner } from "@/components/ui/loading";
+import { useEffect } from "react";
+import { toast } from "sonner";
+import { ApiError, AppError } from "@/lib/queries/errors";
 
 const formSchema = z.object({
 	name: z.string().min(2, {
@@ -21,7 +26,8 @@ const formSchema = z.object({
 });
 
 export function CreateShortLinkForm() {
-	// 1. Define your form.
+	const mutation = useCreateShortLink();
+
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
 		defaultValues: {
@@ -30,12 +36,23 @@ export function CreateShortLinkForm() {
 		},
 	});
 
-	// 2. Define a submit handler.
 	function onSubmit(values: z.infer<typeof formSchema>) {
-		// Do something with the form values.
-		// ✅ This will be type-safe and validated.
-		console.log(values);
+		mutation.mutate({
+			original_url: values.url,
+			name: values.name,
+		});
 	}
+
+	useEffect(() => {
+		if (
+			(mutation.isError && mutation.error instanceof ApiError) ||
+			mutation.error instanceof AppError
+		) {
+			toast.error("error", {
+				description: mutation.error.clientMsg,
+			});
+		}
+	}, [mutation.isError]);
 
 	return (
 		<Form {...form}>
@@ -72,8 +89,11 @@ export function CreateShortLinkForm() {
 						</FormItem>
 					)}
 				/>
-				<Button className="self-end" type="submit">
-					create short link
+				<Button
+					disabled={mutation.isPending}
+					className="self-end flex justify-center items-center"
+					type="submit">
+					{mutation.isPending ? <LoadingSpinner /> : "create short link"}
 				</Button>
 			</form>
 		</Form>
